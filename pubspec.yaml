@@ -40,9 +40,8 @@ dependencies:
   logger: ^1.0.0
 
   # firebase
-#  firebase_core: "^1.5.0"
-#  firebase_storage: "^10.0.2"
-#  cloud_firestore: ^2.3.0
+  firebase_core: "^1.6.0"
+
 
 dev_dependencies:
   flutter_test:
