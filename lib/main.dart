@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smilebunyang/app.dart';
 import 'package:smilebunyang/binding/initbinding.dart';
-import 'package:smilebunyang/home.dart';
 
 void main() async{
   // WidgetsFlutterBinding.ensureInitialized();

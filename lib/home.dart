@@ -13,7 +13,7 @@ class HomePage extends GetView<AppController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('미소분양 관리자 페이지'),
+        // title: const Text(' 관리자 페이지'),
       ),
       body: Row(
         children: [
@@ -35,7 +35,6 @@ class HomePage extends GetView<AppController> {
                 case RoutName.addManagement:
                   return UserManagement();
               }
-              return Container();
             }),
           ),
         ],
@@ -63,7 +62,7 @@ class LeftDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Text(
-                  '미소 분양 관리자님 안녕하세요.',
+                  '관리자님 안녕하세요.',
                   style: TextStyle(fontSize: 20),
                 ),
                 TextButton.icon(
