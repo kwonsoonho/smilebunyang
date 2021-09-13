@@ -23,60 +23,36 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: StreamBuilder<User?>(
-        stream: auth.userChanges(),
-        builder: (BuildContext context, user) {
-          if (user.data == null) {
-            logger.i("로그인 되어 있지 않음.");
-            return Center(
-              child: Container(
-                height: 500,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SvgPicture.asset('assets/svg/roundlogo.svg', width: 300),
-                      Text(
-                        '미소분양 관리자로 승인된 계정만 로그인 가능합니다.',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            await signInWithGoogle();
-                            Get.offAll(AdminCheck(
-                              UID: auth.currentUser!.uid,
-                              Email: auth.currentUser!.email!,
-                            ));
-                          } on Exception catch (e) {
-                            logger.w(e);
-                          }
-                        },
-                        child: Text('관리자 구글 로그인'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          } else {
-            AdminCheck(
-              UID: user.data!.uid,
-              Email: user.data!.email!,
-            );
-          }
-          return Center(
+      body: Center(
+        child: Container(
+          height: 500,
+          child: Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SvgPicture.asset(
-                  'assets/svg/roundlogo.svg',
-                  width: 300,
+                SvgPicture.asset('assets/svg/roundlogo.svg', width: 300),
+                Text(
+                  '미소분양 관리자로 승인된 계정만 로그인 가능합니다.',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                CircularProgressIndicator(),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await signInWithGoogle();
+                      Get.offAll(AdminCheck(
+                        UID: auth.currentUser!.uid,
+                        Email: auth.currentUser!.email!,
+                      ));
+                    } on Exception catch (e) {
+                      logger.w(e);
+                    }
+                  },
+                  child: Text('관리자 구글 로그인'),
+                ),
               ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

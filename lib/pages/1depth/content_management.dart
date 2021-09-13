@@ -22,6 +22,7 @@ class _ContentManagementState extends State<ContentManagement> {
   int selectedSellType = 0;
   TextEditingController _searchKeyWordEditingController = TextEditingController();
   var futureWhere;
+  bool isApproval = false;
 
   @override
   void initState() {
@@ -47,53 +48,54 @@ class _ContentManagementState extends State<ContentManagement> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GroupButton(
-                direction: Axis.horizontal,
-                isRadio: true,
-                spacing: 5,
-                selectedColor: const Color(0xff7E481A),
-                buttonWidth: 100,
-                mainGroupAlignment: MainGroupAlignment.start,
-                selectedButton: selectedSellType,
-                onSelected: (index, isSelected) {
-                  setState(() {
-                    selectedSellType = index;
-                    // logger.i('$selectedSellType, $index', 'Selected');
-                    switch (selectedSellType) {
-                      case 0:
-                        //전체
-                        futureWhere = users;
-                        setState(() {});
-                        break;
-                      case 1:
-                        //아파트
-                        futureWhere = users.where('sellType', isEqualTo: 0);
-                        setState(() {});
-                        break;
-                      case 2:
-                        //상가
-                        futureWhere = users.where('sellType', isEqualTo: 1);
-                        setState(() {});
-                        break;
-                      case 3:
-                        //오피스텔
-                        futureWhere = users.where('sellType', isEqualTo: 2);
-                        setState(() {});
-                        break;
-                      case 4:
-                        //지ㆍ산
-                        futureWhere = users.where('sellType', isEqualTo: 3);
-                        setState(() {});
-                        break;
-                      case 5:
-                        //기타
-                        futureWhere = users.where('sellType', isEqualTo: 4);
-                        setState(() {});
-                        break;
-                    }
-                  });
-                },
-                buttons: ["전체", "아파트", "상가", "오피스텔", "지ㆍ산", "기타"],
+              Row(
+                children: [
+                  GroupButton(
+                    direction: Axis.horizontal,
+                    isRadio: true,
+                    spacing: 5,
+                    selectedColor: const Color(0xff7E481A),
+                    buttonWidth: 80,
+                    mainGroupAlignment: MainGroupAlignment.start,
+                    selectedButton: 0,
+                    onSelected: (index, isSelected) {
+                      if (index == 0) {
+                        isApproval = false;
+                      } else {
+                        isApproval = true;
+                      }
+                      setState(() {});
+                    },
+                    buttons: ["미승인", "승인"],
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GroupButton(
+                    direction: Axis.horizontal,
+                    isRadio: true,
+                    spacing: 5,
+                    selectedColor: const Color(0xff7E481A),
+                    buttonWidth: 80,
+                    mainGroupAlignment: MainGroupAlignment.start,
+                    selectedButton: selectedSellType,
+                    onSelected: (index, isSelected) {
+                      setState(() {
+                        selectedSellType = index;
+                        // logger.i('$selectedSellType, $index', 'Selected');
+
+                        if (selectedSellType == 0) {
+                          futureWhere = users;
+                          setState(() {});
+                        } else {
+                          futureWhere = users.where('sellType', isEqualTo: selectedSellType-1);
+                          setState(() {});
+                        }
+                      });
+                    },
+                    buttons: ["전체", "아파트", "상가", "오피스텔", "지ㆍ산", "기타"],
+                  ),
+                ],
               ),
               Row(
                 children: [
@@ -127,8 +129,12 @@ class _ContentManagementState extends State<ContentManagement> {
           Expanded(
             child: FutureBuilder<QuerySnapshot>(
               future: searchKeyword!.isNotEmpty
-                  ? futureWhere.where('indexMainTitle', arrayContains: searchKeyword).orderBy('WriteTime', descending: true).get()
-                  : futureWhere.orderBy('WriteTime', descending: true).get(),
+                  ? futureWhere
+                      .where('isApproval', isEqualTo: isApproval)
+                      .where('indexMainTitle', arrayContains: searchKeyword)
+                      .orderBy('WriteTime', descending: true)
+                      .get()
+                  : futureWhere.where('isApproval', isEqualTo: isApproval).orderBy('WriteTime', descending: true).get(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   logger.i(snapshot.error);
@@ -163,6 +169,7 @@ class _ContentManagementState extends State<ContentManagement> {
                               Expanded(child: Center(child: Text('작성자 번호'))),
                               Container(width: 100, child: Center(child: Text('광고 추가'))),
                               Container(width: 100, child: Center(child: Text('상세보기기'))),
+                              Container(width: 100, child: Center(child: Text('승연여부'))),
                               Container(width: 50, child: Center(child: Text('삭제'))),
                             ],
                           ),
@@ -253,6 +260,20 @@ class _ContentManagementState extends State<ContentManagement> {
                                           Get.to(SellDetailPreView(sellID: e.value.id));
                                         },
                                         child: Text('상세보기'),
+                                      )),
+                                    ),
+                                    Container(
+                                      width: 100,
+                                      child: Center(
+                                          child: ElevatedButton(
+                                        onPressed: () {
+                                          var _status = e.value['isApproval'];
+                                          users.doc(e.value.id).update({'isApproval': !_status}).then((value) {
+                                            print("User Updated");
+                                            setState(() {});
+                                          }).catchError((error) => print("Failed to update user: $error"));
+                                        },
+                                        child: Text(e.value['isApproval'] ? '승인' : '미승인'),
                                       )),
                                     ),
                                     Container(

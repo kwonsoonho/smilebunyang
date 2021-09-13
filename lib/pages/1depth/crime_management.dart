@@ -7,23 +7,22 @@ import 'package:logger/logger.dart';
 import 'package:smilebunyang/pages/sellDetailpreview.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class adManagement extends StatefulWidget {
-  const adManagement({Key? key}) : super(key: key);
+class CrimeManagement extends StatefulWidget {
+  const CrimeManagement({Key? key}) : super(key: key);
 
   @override
-  _adManagementState createState() => _adManagementState();
+  _CrimeManagementState createState() => _CrimeManagementState();
 }
 
-class _adManagementState extends State<adManagement> {
+class _CrimeManagementState extends State<CrimeManagement> {
   var logger = Logger();
-  var users = FirebaseFirestore.instance.collection('sellList');
+  var users = FirebaseFirestore.instance.collection('CrimeReport');
   var contentCount = 0;
-  int selectedSellType = 0;
   var futureWhere;
 
   @override
   void initState() {
-    futureWhere = users.where('ADPosition', arrayContains: 0);
+    futureWhere = users.where('crimeStatus', isEqualTo: false);
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _adManagementState extends State<adManagement> {
           Container(
             padding: const EdgeInsets.all(20),
             child: Text(
-              '광고 관리',
+              '신고 관리',
               style: TextStyle(fontSize: 20),
             ),
           ),
@@ -47,25 +46,25 @@ class _adManagementState extends State<adManagement> {
             isRadio: true,
             spacing: 5,
             selectedColor: const Color(0xff7E481A),
-            // buttonWidth: 50,
+            buttonWidth: 100,
             mainGroupAlignment: MainGroupAlignment.start,
-            selectedButton: selectedSellType,
+            selectedButton: 0,
             onSelected: (index, isSelected) {
               setState(() {
-                selectedSellType = index;
-                futureWhere = users.where('ADPosition', arrayContains: selectedSellType);
-                setState(() {
-
-                });
+                if (index == 0) {
+                  futureWhere = users.where('crimeStatus', isEqualTo: false);
+                } else {
+                  futureWhere = users.where('crimeStatus', isEqualTo: true);
+                }
+                setState(() {});
               });
             },
-            buttons: ["메인 슬라이드", "메인 추천1", "메인 추천2", "메인 베너 슬라이드", "검색 추천", "검색 베너 슬라이드", "아파트", "상가", "오피스텔", "지산", "기타"],
+            buttons: ["미 처리", "처리"],
           ),
           Expanded(
             child: FutureBuilder<QuerySnapshot>(
-              future: futureWhere.orderBy('WriteTime', descending: true).get(),
+              future: futureWhere.orderBy('reportTime', descending: true).get(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                logger.i(snapshot.connectionState, 'connectionState');
                 if (snapshot.hasError) {
                   logger.i(snapshot.error);
                   return Text("Something went wrong");
@@ -80,22 +79,26 @@ class _adManagementState extends State<adManagement> {
                   // Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
 
                   contentCount = snapshot.data!.docs.length;
-                  // return Container(child: Text('data'),);
-                  logger.i(contentCount);
+                  // logger.i(contentCount);
                   return Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('광고 수 : $contentCount'),
+                        Text('총 문의 수 : $contentCount'),
                         ListTile(
                           title: Row(
                             children: [
-                              // 번호, 타입, 제목, 광고주 번호, 삭제
+                              // 번호
+                              // 내용
+                              // 시간
+                              // 신고자 // 생략
+                              // 상태
+                              // 글 상세보기
                               Container(width: 50, child: Center(child: Text('번호'))),
-                              Container(width: 100, child: Center(child: Text('타입'))),
-                              Expanded(child: Center(child: Text('요청 제목'))),
-                              Expanded(child: Center(child: Text('광고주 연락처'))),
-                              Container(width: 50, child: Center(child: Text('삭제'))),
+                              Expanded(child: Center(child: Text('신고 내용'))),
+                              Expanded(child: Center(child: Text('신고일'))),
+                              Container(width: 100, child: Center(child: Text('처리상태'))),
+                              Container(width: 100, child: Center(child: Text('신고 글'))),
                             ],
                           ),
                         ),
@@ -105,23 +108,38 @@ class _adManagementState extends State<adManagement> {
                               return ListTile(
                                 title: Row(
                                   children: [
-                                    Container(width: 50, child: Center(child: Text(((e.key + 1).toString())))),
-                                    Container(width: 100, child: Center(child: Text(getSellTypeChange(e.value['sellType'])))),
-                                    Expanded(child: Center(child: Text(e.value['mainTitle']))),
-                                    Expanded(child: Center(child: Text(e.value['phoneNumber']))),
-                                    Container(
-                                      width: 50,
+                                    Container(width: 50, child: Center(child: Text((e.key + 1).toString()))),
+                                    Expanded(child: Center(child: Text((e.value['reason'])))),
+                                    Expanded(
                                       child: Center(
-                                        child: IconButton(
-                                          onPressed: () async {
-                                            logger.i('${e.value.id}, ${e.value['ADPosition']}');
-                                            users.doc(e.value.id).update({
-                                              'ADPosition': FieldValue.arrayRemove([selectedSellType])
-                                            }).then((value) {
+                                        child: Text(
+                                            DateFormat.yMd('ko_KR').add_jms().format(DateTime.fromMillisecondsSinceEpoch(e.value['reportTime']))),
+                                      ),
+                                    ),
+                                    // 문의 내용
+                                    Container(
+                                      width: 100,
+                                      child: Center(
+                                        child: TextButton(
+                                          onPressed: () {
+                                            var _status = e.value['crimeStatus'];
+                                            users.doc(e.value.id).update({'crimeStatus': !_status}).then((value) {
+                                              print("User Updated");
                                               setState(() {});
-                                            });
+                                            }).catchError((error) => print("Failed to update user: $error"));
                                           },
-                                          icon: Icon(Icons.delete_forever),
+                                          child: Text(e.value['crimeStatus'] ? '처리' : '미 처리'),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 100,
+                                      child: Center(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Get.to(SellDetailPreView(sellID: e.value['docID']));
+                                          },
+                                          child: Text('상세보기'),
                                         ),
                                       ),
                                     ),
@@ -145,21 +163,5 @@ class _adManagementState extends State<adManagement> {
         ],
       ),
     );
-  }
-
-  String getSellTypeChange(int SellType) {
-    switch (SellType) {
-      case 0:
-        return '아파트';
-      case 1:
-        return '상가';
-      case 2:
-        return '오피스텔';
-      case 3:
-        return '지식산업센터';
-      case 4:
-        return '기타';
-    }
-    return '';
   }
 }

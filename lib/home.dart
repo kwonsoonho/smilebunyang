@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:smilebunyang/controller/app_controller.dart';
 import 'package:smilebunyang/pages/1depth/ad_management.dart.dart';
 import 'package:smilebunyang/pages/1depth/content_management.dart';
+import 'package:smilebunyang/pages/1depth/crime_management.dart';
 import 'package:smilebunyang/pages/1depth/sellreq_management.dart';
 import 'package:smilebunyang/pages/1depth/user_management.dart';
 import 'package:smilebunyang/pages/selleruser_management.dart';
@@ -37,7 +38,7 @@ class HomePage extends GetView<AppController> {
                 case RoutName.adManagement:
                   return adManagement();
                 case RoutName.crimeReport:
-                  return UserManagement();
+                  return CrimeManagement();
               }
             }),
           ),
