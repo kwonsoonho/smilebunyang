@@ -2,18 +2,10 @@ import 'package:flutter/material.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import 'package:smilebunyang/home.dart';
+import 'package:smilebunyang/loginpage.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(App());
-}
-
-/// We are using a StatefulWidget such that we only create the [Future] once,
-/// no matter how many times our widget rebuild.
-/// If we used a [StatelessWidget], in the event where [App] is rebuilt, that
-/// would re-initialize FlutterFire and make our application re-enter loading state,
-/// which is undesired.
 class App extends StatefulWidget {
   // Create the initialization Future outside of `build`:
   @override
@@ -38,6 +30,7 @@ class _AppState extends State<App> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
+          // Get.offAllNamed('/');
           return HomePage();
         }
 

@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       getPages: [
+        // GetPage(name: '/App', page: (() => App())),
         GetPage(name: '/', page: (() => LoginPage())),
-        GetPage(name: '/App', page: (() => App()))
         // GetPage(name: '/', page: (() => HomePage()))
       ],
     );

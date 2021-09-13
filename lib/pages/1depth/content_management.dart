@@ -161,7 +161,8 @@ class _ContentManagementState extends State<ContentManagement> {
                               Expanded(child: Center(child: Text('주소'))),
                               Expanded(child: Center(child: Text('작성일'))),
                               Expanded(child: Center(child: Text('작성자 번호'))),
-                              Container(width: 100, child: Center(child: Text('상세보기'))),
+                              Container(width: 100, child: Center(child: Text('광고 추가'))),
+                              Container(width: 100, child: Center(child: Text('상세보기기'))),
                               Container(width: 50, child: Center(child: Text('삭제'))),
                             ],
                           ),
@@ -188,6 +189,62 @@ class _ContentManagementState extends State<ContentManagement> {
                                     )),
                                     //작성자 번호
                                     Expanded(child: Center(child: Text(e.value['phoneNumber']))),
+                                    Container(
+                                      width: 100,
+                                      child: Center(
+                                          child: ElevatedButton(
+                                        onPressed: () {
+                                          var _addAdPosition;
+                                          Get.defaultDialog(
+                                              title: '광고 선택',
+                                              content: GroupButton(
+                                                direction: Axis.vertical,
+                                                isRadio: true,
+                                                spacing: 5,
+                                                selectedColor: const Color(0xff7E481A),
+                                                buttonWidth: 150,
+                                                mainGroupAlignment: MainGroupAlignment.start,
+                                                selectedButton: _addAdPosition,
+                                                onSelected: (index, isSelected) {
+                                                  _addAdPosition = index;
+                                                  logger.i('$selectedSellType, $index', 'Selected');
+                                                },
+                                                buttons: [
+                                                  "메인 슬라이드",
+                                                  "메인 추천1",
+                                                  "메인 추천2",
+                                                  "메인 베너 슬라이드",
+                                                  "검색 추천",
+                                                  "검색 베너 슬라이드",
+                                                  "아파트",
+                                                  "상가",
+                                                  "오피스텔",
+                                                  "지산",
+                                                  "기타"
+                                                ],
+                                              ),
+                                              confirm: OutlinedButton(
+                                                  onPressed: () async {
+                                                    // 해당 글에 해당 번호가 있는지 확인
+                                                    List AddList = e.value['ADPosition'];
+                                                    if (AddList.contains(_addAdPosition)) {
+                                                      Get.back();
+                                                      Get.defaultDialog(title: '안내', middleText: '이미 해당 위치에 등록되어 있습니다.');
+                                                    } else {
+                                                      Get.back();
+                                                      AddList.add(_addAdPosition);
+                                                      await users.doc(e.value.id).update({'ADPosition': AddList}).then((value) {
+                                                        Get.defaultDialog(title: '안내', middleText: '추가가 완료되었습니다.');
+                                                      });
+                                                      // 해당 글에 해당 번호가 없을 경우 추가
+                                                    }
+                                                  },
+                                                  child: Text('광고 추가')),
+                                              cancel: ElevatedButton(onPressed: () => Get.back(), child: Text('취소')));
+                                        },
+                                        child: Text('광고추가'),
+                                      )),
+                                    ),
                                     Container(
                                       width: 100,
                                       child: Center(
@@ -229,7 +286,6 @@ class _ContentManagementState extends State<ContentManagement> {
                                                         setState(() {});
                                                       },
                                                     );
-
                                                   },
                                                   child: Text('삭제')),
                                               cancel: ElevatedButton(

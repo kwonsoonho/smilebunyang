@@ -78,7 +78,7 @@ class _SellReqManagementState extends State<SellReqManagement> {
                     }
                   });
                 },
-                buttons: ["전체", "처리 완료", "미 처리"],
+                buttons: ["전체", "접수", "완료"],
               ),
               Row(
                 children: [
@@ -187,7 +187,7 @@ class _SellReqManagementState extends State<SellReqManagement> {
                                               setState(() {});
                                             }).catchError((error) => print("Failed to update user: $error"));
                                           },
-                                          child: Text(e.value['reqStatus'] ? '처리 완료' : '미 처리'),
+                                          child: Text(e.value['reqStatus'] ? '요청' : '완료'),
                                         ))),
                                   ],
                                 ),
@@ -210,4 +210,6 @@ class _SellReqManagementState extends State<SellReqManagement> {
       ),
     );
   }
+
+
 }

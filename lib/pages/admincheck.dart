@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:smilebunyang/app.dart';
 import 'package:smilebunyang/loginpage.dart';
@@ -27,6 +28,7 @@ class _AdminCheckState extends State<AdminCheck> {
       body: FutureBuilder<DocumentSnapshot>(
         future: users.get(),
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          logger.i(snapshot.connectionState);
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
@@ -35,18 +37,17 @@ class _AdminCheckState extends State<AdminCheck> {
             // 문서가 없음. 최초 가입으로 판단함.
             // Get.offAll(TypeSelect());
             addAdmin();
-            return Center(child: Text('등록되지 않은 관리자 입니다. 사용이 불가능합니다.'),);
+            return rejectAdmin();
           }
           if (snapshot.connectionState == ConnectionState.done) {
             // logger.w("snapshot.connectionState == ConnectionState.done : ${snapshot.connectionState}");
             var data = snapshot.data!.data() as Map<String, dynamic>;
             if (data['Type'] == true) {
-              // return App();
               return App();
             } else if (data['Type'] == false) {
-              return LoginPage();
+              return rejectAdmin();
             } else {
-              return Text("오류.");
+              return Text("오류 상태입니다.");
             }
           }
           return Center(child: CircularProgressIndicator());
@@ -73,4 +74,21 @@ class _AdminCheckState extends State<AdminCheck> {
     }
   }
 
+}
+
+class rejectAdmin extends StatelessWidget {
+  const rejectAdmin({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(child: Text('등록되지 않은 관리자 입니다.\n사용이 불가능합니다.'),),
+        ElevatedButton(onPressed: () => Get.offAllNamed('/'), child: Text('돌아가기'))
+      ],
+    );
+  }
 }
