@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:smilebunyang/controller/push_controller.dart';
 import 'package:smilebunyang/pages/sellDetailpreview.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -88,7 +89,7 @@ class _ContentManagementState extends State<ContentManagement> {
                           futureWhere = users;
                           setState(() {});
                         } else {
-                          futureWhere = users.where('sellType', isEqualTo: selectedSellType-1);
+                          futureWhere = users.where('sellType', isEqualTo: selectedSellType - 1);
                           setState(() {});
                         }
                       });
@@ -167,8 +168,9 @@ class _ContentManagementState extends State<ContentManagement> {
                               Expanded(child: Center(child: Text('주소'))),
                               Expanded(child: Center(child: Text('작성일'))),
                               Expanded(child: Center(child: Text('작성자 번호'))),
+                              Container(width: 100, child: Center(child: Text('광고 알림'))),
                               Container(width: 100, child: Center(child: Text('광고 추가'))),
-                              Container(width: 100, child: Center(child: Text('상세보기기'))),
+                              Container(width: 100, child: Center(child: Text('상세보기'))),
                               Container(width: 100, child: Center(child: Text('승연여부'))),
                               Container(width: 50, child: Center(child: Text('삭제'))),
                             ],
@@ -196,6 +198,19 @@ class _ContentManagementState extends State<ContentManagement> {
                                     )),
                                     //작성자 번호
                                     Expanded(child: Center(child: Text(e.value['phoneNumber']))),
+                                    Container(
+                                      width: 100,
+                                      child: Center(
+                                          child: ElevatedButton(
+                                        onPressed: () {
+                                          logger.i("푸쉬 발송");
+                                          PostCall().sendPush(e.value['mainTitle'], e.value.id,e.value['images'][0],getSellTypeChange((e.value['sellType'])));
+                                          // PostCall().sendPush();
+                                        },
+                                        child: Text('푸쉬 발송'),
+                                      )),
+                                    ),
+                                    // 광고 추가
                                     Container(
                                       width: 100,
                                       child: Center(

@@ -7,6 +7,7 @@ import 'package:smilebunyang/controller/app_controller.dart';
 import 'package:smilebunyang/pages/1depth/ad_management.dart.dart';
 import 'package:smilebunyang/pages/1depth/content_management.dart';
 import 'package:smilebunyang/pages/1depth/crime_management.dart';
+import 'package:smilebunyang/pages/1depth/push_send.dart';
 import 'package:smilebunyang/pages/1depth/sellreq_management.dart';
 import 'package:smilebunyang/pages/1depth/user_management.dart';
 import 'package:smilebunyang/pages/selleruser_management.dart';
@@ -30,15 +31,17 @@ class HomePage extends GetView<AppController> {
 
               switch (RoutName.values[controller.currentIndex.value]) {
                 case RoutName.UserManagement:
-                  return UserManagement();
+                  return const UserManagement();
                 case RoutName.contentManagement:
-                  return ContentManagement();
+                  return const ContentManagement();
                 case RoutName.requestList:
-                  return SellReqManagement();
+                  return const SellReqManagement();
                 case RoutName.adManagement:
-                  return adManagement();
+                  return const adManagement();
                 case RoutName.crimeReport:
-                  return CrimeManagement();
+                  return const CrimeManagement();
+                case RoutName.pushSend:
+                  return const PushSend();
               }
             }),
           ),
@@ -91,6 +94,7 @@ class LeftDrawer extends StatelessWidget {
             ListTile(title: const Text('매물 요청 리스트'), onTap: () => AppController.to.currentIndex(2)),
             ListTile(title: const Text('광고 관리'), onTap: () => AppController.to.currentIndex(3)),
             ListTile(title: const Text('신고 리스트'), onTap: () => AppController.to.currentIndex(4)),
+            // ListTile(title: const Text('푸쉬 보내기'), onTap: () => AppController.to.currentIndex(5)),
           ],
         ),
       ),

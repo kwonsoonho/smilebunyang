@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
-enum RoutName { UserManagement, contentManagement, requestList, adManagement, crimeReport  }
+enum RoutName { UserManagement, contentManagement, requestList, adManagement, crimeReport, pushSend  }
 
 class AppController extends GetxService {
   static AppController get to => Get.find();
