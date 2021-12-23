@@ -19,7 +19,7 @@ class HomePage extends GetView<AppController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('미소분양 관리자 페이지'),
+          title: const Text('미소분양 관리자 페이지 1.1.4'),
           ),
       body: Row(
         children: [
