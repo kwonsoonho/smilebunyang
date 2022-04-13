@@ -30,12 +30,13 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SvgPicture.asset('assets/svg/roundlogo.svg', width: 300),
-                Text(
-                  '미소분양 관리자로 승인된 계정만 로그인 가능합니다.',
+                const Image(image: AssetImage("assets/icon/logo.png"),width: 300,),
+                const Text(
+                  '분양톡톡 관리자로 승인된 계정만 로그인 가능합니다.',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(24)),
                   onPressed: () async {
                     try {
                       await signInWithGoogle();
@@ -47,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                       logger.w(e);
                     }
                   },
-                  child: Text('관리자 구글 로그인'),
+                  child: const Text('관리자 구글 로그인'),
                 ),
               ],
             ),

@@ -9,6 +9,7 @@ class AdminCheck extends StatefulWidget {
   final String UID;
   final String Email;
 
+
   const AdminCheck({Key? key, required this.UID, required this.Email}) : super(key: key);
 
   @override
@@ -42,8 +43,10 @@ class _AdminCheckState extends State<AdminCheck> {
           if (snapshot.connectionState == ConnectionState.done) {
             // logger.w("snapshot.connectionState == ConnectionState.done : ${snapshot.connectionState}");
             var data = snapshot.data!.data() as Map<String, dynamic>;
+            var SuperAdmin = data['SuperAdmin'];
+
             if (data['Type'] == true) {
-              return App();
+              return App(SuperAdmin: SuperAdmin,);
             } else if (data['Type'] == false) {
               return rejectAdmin();
             } else {

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:smilebunyang/controller/app_controller.dart';
 import 'package:smilebunyang/pages/sellDetailpreview.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -15,6 +16,8 @@ class CrimeManagement extends StatefulWidget {
 }
 
 class _CrimeManagementState extends State<CrimeManagement> {
+  var appController = Get.put(AppController());
+
   var logger = Logger();
   var users = FirebaseFirestore.instance.collection('CrimeReport');
   var contentCount = 0;
@@ -45,7 +48,7 @@ class _CrimeManagementState extends State<CrimeManagement> {
             direction: Axis.horizontal,
             isRadio: true,
             spacing: 5,
-            selectedColor: const Color(0xff7E481A),
+            selectedColor: appController.baseColor,
             buttonWidth: 100,
             mainGroupAlignment: MainGroupAlignment.start,
             selectedButton: 0,

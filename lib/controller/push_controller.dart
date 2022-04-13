@@ -20,14 +20,8 @@ class PostCall {
           'key=AAAAlraZXLE:APA91bGJxr9lmOnVHHNfLnbfQ6GZ82mGvzQLFMmXCy510TslcdxILRxObEDcxMdUSbs6XJpy8s5SRbpV4xydZJkvKsTKthqKwywzz_CZTRseOGP8Jeypge1p09qLcap1sbUlud90JFu1'
     };
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .where('PhoneNumber',
-            isEqualTo:
-                "01041043676")
-        .get()
-        .then((QuerySnapshot querySnapshot) async {
-    // FirebaseFirestore.instance.collection('users').where('Type', isEqualTo: "normal").get().then((QuerySnapshot querySnapshot) async {
+    // FirebaseFirestore.instance.collection('users').where('PhoneNumber', isEqualTo: "01049513676").get().then((QuerySnapshot querySnapshot) async {
+      FirebaseFirestore.instance.collection('users').where('Type', isEqualTo: "normal").get().then((QuerySnapshot querySnapshot) async {
       for (var doc in querySnapshot.docs) {
         final data = {
           "notification": {"body": "[$type] $title", "image": image},
@@ -36,8 +30,10 @@ class PostCall {
             "detail": page,
             // "update" : ""
           },
+          "image": image,
+          "mutable-content": true,
           "to": doc["Token"],
-          "priority":"high",
+          "priority": "high",
         };
 
         final response = await http.post(Uri.parse(postUrl), body: json.encode(data), encoding: Encoding.getByName('utf-8'), headers: headers);

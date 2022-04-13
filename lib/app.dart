@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:smilebunyang/home.dart';
-import 'package:smilebunyang/loginpage.dart';
 
 class App extends StatefulWidget {
-  // Create the initialization Future outside of `build`:
+
+  bool SuperAdmin;
+  App({Key? key,required this.SuperAdmin}) : super(key: key);
+
   @override
   _AppState createState() => _AppState();
 }
@@ -31,7 +33,7 @@ class _AppState extends State<App> {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           // Get.offAllNamed('/');
-          return HomePage();
+          return HomePage(SuperAdmin: widget.SuperAdmin);
         }
 
         // Otherwise, show something whilst waiting for initialization to complete

@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:smilebunyang/pages/sellDetailpreview.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:smilebunyang/controller/app_controller.dart';
 
 class adManagement extends StatefulWidget {
   const adManagement({Key? key}) : super(key: key);
@@ -15,6 +13,8 @@ class adManagement extends StatefulWidget {
 }
 
 class _adManagementState extends State<adManagement> {
+  var appController = Get.put(AppController());
+
   var logger = Logger();
   var users = FirebaseFirestore.instance.collection('sellList');
   var contentCount = 0;
@@ -37,7 +37,7 @@ class _adManagementState extends State<adManagement> {
         children: [
           Container(
             padding: const EdgeInsets.all(20),
-            child: Text(
+            child: const Text(
               '광고 관리',
               style: TextStyle(fontSize: 20),
             ),
@@ -46,7 +46,7 @@ class _adManagementState extends State<adManagement> {
             direction: Axis.horizontal,
             isRadio: true,
             spacing: 5,
-            selectedColor: const Color(0xff7E481A),
+            selectedColor: appController.baseColor,
             // buttonWidth: 50,
             mainGroupAlignment: MainGroupAlignment.start,
             selectedButton: selectedSellType,
@@ -59,7 +59,7 @@ class _adManagementState extends State<adManagement> {
                 });
               });
             },
-            buttons: ["메인 슬라이드", "메인 추천1", "메인 추천2", "메인 베너 슬라이드", "검색 추천", "검색 베너 슬라이드", "아파트", "상가", "오피스텔", "지산", "기타"],
+            buttons: const ["메인 슬라이드", "홈 광고", "사용 안함", "메인 하단 슬라이드", "검색 추천", "검색 베너 슬라이드", "아파트", "상가", "오피스텔", "지산", "기타"],
           ),
           Expanded(
             child: FutureBuilder<QuerySnapshot>(

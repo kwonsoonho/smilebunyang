@@ -4,7 +4,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:smilebunyang/app.dart';
 import 'package:smilebunyang/binding/initbinding.dart';
+import 'package:smilebunyang/home.dart';
 import 'package:smilebunyang/loginpage.dart';
+import 'package:smilebunyang/pages/policypage.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -18,10 +20,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var baseColor = Color(0xff7E481A);
+    var baseColor = Colors.black;
 
     return GetMaterialApp(
-      title: '미소분양 관리자',
+      title: '분양톡톡 관리자',
       theme: ThemeData(
           inputDecorationTheme:
               InputDecorationTheme(focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: baseColor)), focusColor: baseColor),
@@ -44,7 +46,8 @@ class MyApp extends StatelessWidget {
       ],
       getPages: [
         // GetPage(name: '/App', page: (() => App())),
-        GetPage(name: '/', page: (() => LoginPage())),
+        GetPage(name: '/', page: (() => const LoginPage())),
+        GetPage(name: '/policy',page: (() => const PolicyPage())),
         // GetPage(name: '/', page: (() => HomePage()))
       ],
     );
